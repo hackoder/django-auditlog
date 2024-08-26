@@ -394,6 +394,20 @@ class ManyRelatedModelTest(TestCase):
             LogEntry.objects.count()
         )  # created by the create() calls above
 
+    def test_m2m_signal_from_reverse_relation(self):
+        self.related.reverse_related.add(self.obj)
+        log_entry = self.obj.history.first()
+        self.assertEqual(
+            log_entry.changes,
+            {
+                "related_another": {
+                    "type": "m2m",
+                    "operation": "add",
+                    "objects": [smart_str(self.related)],
+                }
+            },
+        )
+
     def test_recursive(self):
         self.obj.recursive.add(self.recursive)
         self.assertEqual(

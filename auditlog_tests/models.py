@@ -117,6 +117,7 @@ class ManyRelatedModel(models.Model):
 
     recursive = models.ManyToManyField("self")
     related = models.ManyToManyField("ManyRelatedOtherModel", related_name="related")
+    related_another = models.ManyToManyField("ManyRelatedOtherModel", related_name="reverse_related")
 
     history = AuditlogHistoryField(delete_related=True)
 
@@ -363,7 +364,7 @@ auditlog.register(ProxyModel)
 auditlog.register(RelatedModel)
 auditlog.register(ManyRelatedModel)
 auditlog.register(ManyRelatedModel.recursive.through)
-m2m_only_auditlog.register(ManyRelatedModel, m2m_fields={"related"})
+m2m_only_auditlog.register(ManyRelatedModel, m2m_fields={"related", "related_another"})
 auditlog.register(SimpleExcludeModel, exclude_fields=["text"])
 auditlog.register(SimpleMappingModel, mapping_fields={"sku": "Product No."})
 auditlog.register(AdditionalDataIncludedModel)
